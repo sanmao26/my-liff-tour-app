@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover"
+    />
+    <title>My LIFF App</title>
+    <style>
+      body {
+        padding: 256px;
+      }
+      button {
+        display: none;
+        width: 50%;
+        padding: 16px 0;
+        margin: 16px auto;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="btnShare" onclick="sendShare()">Share Target Picker</button>
+    <button id="btnLogin" onclick="liff.login()">Log In</button>
+    <button id="btnLogOut" onclick="logOut()">Log Out</button>
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <script>
+      async function sendShare() {
+        const result = await liff.shareTargetPicker([
+          {
+            type: "flex",
+            altText:
+              "🔥ลดทั้งเดือน เพียง 19,999💥ญี่ปุ่น โตเกียว ซัมเมอร์ ฟีลดี...คุ้มครบ จบในทริปเดียว!",
+            contents: {
+  "type": "bubble",
+  "size": "giga",
+  "hero": {
+    "type": "image",
+    "url": "https://i.postimg.cc/fy4WDtKJ/S-31547401.jpg",
+    "size": "full",
+    "aspectRatio": "1:1",
+    "aspectMode": "cover",
+    "action": {
+      "type": "uri",
+      "uri": "https://www.probookingcenter.com/tours/series/1424"
+    }
+  },
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "text",
+        "text": "TOKYO SUMMER ไวไว คลิก 5D3N",
+        "weight": "bold",
+        "size": "lg"
+      },
+      {
+        "type": "box",
+        "layout": "baseline",
+        "contents": [
+          {
+            "type": "text",
+            "text": "5D3N",
+            "size": "sm",
+            "color": "#aaaaaa"
+          },
+          {
+            "type": "text",
+            "text": "ลดทั้งเดือน ก.ค. 68",
+            "size": "sm",
+            "color": "#aaaaaa",
+            "align": "end"
+          }
+        ],
+        "margin": "md"
+      },
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "contents": [
+          {
+            "type": "text",
+            "text": "รหัส: PJPNRT20-SL ",
+            "size": "md",
+            "flex": 2
+          },
+          {
+            "type": "text",
+            "text": "19,999 บาท",
+            "size": "xl",
+            "weight": "bold",
+            "color": "#ff5555",
+            "align": "end",
+            "flex": 2
+          }
+        ],
+        "flex": 2
+      },
+      {
+        "type": "separator",
+        "margin": "lg"
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "margin": "lg",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "text",
+            "text": "วันที่เดินทาง",
+            "weight": "bold",
+            "size": "md"
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "10–14 ก.ค. 2025",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "27,999",
+                "align": "end",
+                "color": "#212121",
+                "style": "italic",
+                "decoration": "line-through"
+              },
+              {
+                "type": "text",
+                "text": "19,999",
+                "align": "end",
+                "color": "#ff5555",
+                "weight": "bold"
+              },
+              {
+                "type": "text",
+                "text": "จอง",
+                "align": "end",
+                "color": "#55ff55",
+                "action": {
+                  "type": "uri",
+                  "label": "action",
+                  "uri": "https://www.probookingcenter.com/checkout?code=eyJpdiI6IlNiVjI4UVhsNXc0NEN0ZnNsbk95amc9PSIsInZhbHVlIjoiQ3BzbGo1SERuaXpEbDB1QzBYUlU0Zz09IiwibWFjIjoiOTFiOWI5MDA3ZTIxYjY0NGQ2ZTE3MDVhMjQxODExZTdlMDEzZTQxYjhmZTU3MWQzYjgyYTJmZmM0NzQ5NDViNCIsInRhZyI6IiJ9"
+                }
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "17–21 ก.ค. 2025",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "22,999",
+                "align": "end",
+                "color": "#212121",
+                "style": "italic",
+                "decoration": "line-through"
+              },
+              {
+                "type": "text",
+                "text": "19,999",
+                "align": "end",
+                "color": "#ff5555",
+                "weight": "bold"
+              },
+              {
+                "type": "text",
+                "text": "จอง",
+                "align": "end",
+                "color": "#55ff55",
+                "action": {
+                  "type": "uri",
+                  "label": "action",
+                  "uri": "https://www.probookingcenter.com/checkout?code=eyJpdiI6Ilk0SXdua2wrcnpFWm0wbkpCeUpwMlE9PSIsInZhbHVlIjoiVXZvbkN1enlqS2IzU2UzS3RVL00zQT09IiwibWFjIjoiMTUwODEwNDZmMmQzMTE0NjI2NGExZGZlZjY0YTM5OTY2MjU0ZDVkOWNiMjcwNzFlZDlmZTBjYjJjNGQ4MzQzOCIsInRhZyI6IiJ9"
+                }
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "24–28 ก.ค. 2025",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "27,999",
+                "align": "end",
+                "color": "#212121",
+                "style": "italic",
+                "decoration": "line-through"
+              },
+              {
+                "type": "text",
+                "text": "19,999",
+                "align": "end",
+                "color": "#ff5555",
+                "weight": "bold"
+              },
+              {
+                "type": "text",
+                "text": "จอง",
+                "align": "end",
+                "color": "#55ff55",
+                "action": {
+                  "type": "uri",
+                  "label": "action",
+                  "uri": "https://www.probookingcenter.com/checkout?code=eyJpdiI6InNxUlpPT0VyaFBQWUJNOThrc3ZLd0E9PSIsInZhbHVlIjoiTEMvUWh5SVNMTDI2V2hjT3pOR0xrdz09IiwibWFjIjoiZjE3Zjk5MmI4NzI0YmQ4NTQ2NWMwZmFlNTJkZTk4ZTM4NDY2ZGNmNDFlYmRiZjg3YWMwOTE3ZGIwZDZiZWM4MyIsInRhZyI6IiJ9"
+                }
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "27–31 ก.ค. 2025",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "27,999",
+                "align": "end",
+                "color": "#212121",
+                "style": "italic",
+                "decoration": "line-through"
+              },
+              {
+                "type": "text",
+                "text": "19,999",
+                "align": "end",
+                "color": "#ff5555",
+                "weight": "bold"
+              },
+              {
+                "type": "text",
+                "text": "จอง",
+                "align": "end",
+                "color": "#55ff55",
+                "action": {
+                  "type": "uri",
+                  "label": "action",
+                  "uri": "https://www.probookingcenter.com/checkout?code=eyJpdiI6IlpYY3VqV2xSSjBKSi9sb1BKanl2ckE9PSIsInZhbHVlIjoialk1K3Blb3pDZnpBVWtHS2t5Q00ydz09IiwibWFjIjoiYjViN2ZhMDAyZmMxNDY5MzlmYTU5OGJkMzBlMjM5NDJhNTQ0MjUzNTYwY2U1YzE4ZTNkMjVhODdkMzExZDZmZiIsInRhZyI6IiJ9"
+                }
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "31–04 ส.ค. 2025",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "22,999",
+                "align": "end",
+                "color": "#212121",
+                "style": "italic",
+                "decoration": "line-through"
+              },
+              {
+                "type": "text",
+                "text": "19,999",
+                "align": "end",
+                "color": "#ff5555",
+                "weight": "bold"
+              },
+              {
+                "type": "text",
+                "text": "จอง",
+                "align": "end",
+                "color": "#55ff55",
+                "action": {
+                  "type": "uri",
+                  "label": "action",
+                  "uri": "https://www.probookingcenter.com/checkout?code=eyJpdiI6IkhOZ3lyOGloRFBTV2g5ampjQkFnbWc9PSIsInZhbHVlIjoiZFZvN3hNNDgvaUFIVmlRT2NDYWFCZz09IiwibWFjIjoiNDdhYmZmZThmMTk0MTA4OWYzYjdhNGVlNmI2MGQ2ZWQ2YWRjY2Y1ZTc1MjBmZWNmYWVjMmYwNmJiYzNjOWVhZSIsInRhZyI6IiJ9"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "spacing": "sm",
+    "contents": [
+      {
+        "type": "button",
+        "style": "primary",
+        "color": "#e51c23",
+        "action": {
+          "type": "uri",
+          "label": "ดูโปรแกรมทัวร์",
+          "uri": "https://static.probookingcenter.com/media/pdf/1424?view=1"
+        }
+      },
+      {
+        "type": "button",
+        "action": {
+          "type": "uri",
+          "label": "ติดต่อสอบถาม",
+          "uri": "https://line.me/ti/p/h_C7OzRFqy"
+        }
+      }
+    ]
+  }
+}
+          
+          },
+          
+  
+          
+        ]);
+        if (result) {
+          alert(`[${result.status}] Message sent!`);
+        } else {
+          const [majorVer, minorVer, patchVer] = (
+            liff.getLineVersion() || ""
+          ).split(".");
+
+          if (minorVer === undefined) {
+            alert("ShareTargetPicker was canceled in external browser");
+            return;
+          }
+
+          if (
+            parseInt(majorVer) >= 10 &&
+            parseInt(minorVer) >= 10 &&
+            parseInt(patchVer) > 0
+          ) {
+            alert("ShareTargetPicker was canceled in LINE app");
+          }
+        }
+      }
+      function logOut() {
+        liff.logout();
+        window.location.reload();
+      }
+      async function main() {
+        await liff.init({ liffId: "2006670623-4jqlevoD" });
+        if (liff.isLoggedIn()) {
+          document.getElementById("btnShare").style.display = "block";
+          if (!liff.isInClient()) {
+            document.getElementById("btnLogOut").style.display = "block";
+          }
+        } else {
+          document.getElementById("btnLogin").style.display = "block";
+        }
+      }
+      main();
+    </script>
+  </body>
+</html>
