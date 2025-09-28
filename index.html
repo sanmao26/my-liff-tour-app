@@ -1,98 +1,134 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover"
-    />
-    <title>My LIFF App</title>
-    <style>
-      body {
-        padding: 256px;
-      }
-      button {
-        display: none;
-        width: 50%;
-        padding: 16px 0;
-        margin: 16px auto;
-      }
-    </style>
-  </head>
-  <body>
-    <button id="btnShare" onclick="sendShare()">Share Target Picker</button>
-    <button id="btnLogin" onclick="liff.login()">Log In</button>
-    <button id="btnLogOut" onclick="logOut()">Log Out</button>
-    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <script>
-      async function sendShare() {
-        const result = await liff.shareTargetPicker([
-          {
-            type: "flex",
-            altText:
-              "โปรตัดกรุ๊ปญี่ปุ่นไม่บวกเพิ่ม 25-33 คน ราคาเดิม วันนี้ - 30 ต.ค.68 ",
-            contents: {
-  "type": "bubble",
-  "size": "giga",
-  "hero": {
-    "type": "image",
-    "url": "https://i.postimg.cc/RhtqmRHv/SL-31-68.jpg",
-    "size": "full",
-    "aspectRatio": "3:4",
-    "aspectMode": "cover",
-    "action": {
-      "type": "uri",
-      "uri": "https://www.probookingcenter.com/tours/japan"
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover" />
+  <title>My LIFF App</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body { font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial; margin:0; padding:24px; }
+    .wrap { max-width: 720px; margin: 0 auto; padding: 24px; display: grid; gap: 16px; }
+    h1 { margin: 0; font-size: clamp(18px, 4vw, 24px); }
+    .card { border: 1px solid #e5e7eb33; border-radius: 14px; padding: 16px; box-shadow: 0 6px 20px #0001; }
+    button, a.btn {
+      display: none; width: 100%; padding: 14px 16px; border-radius: 12px; border: 0;
+      text-align: center; font-weight: 600; text-decoration: none;
     }
-  }
-}
-      
-          },
-                     {
-  "type": "video",
-  "originalContentUrl": "https://youtu.be/LIOf-bZbeZQ?si=RfI75H_fsE2Mi76f",
-  "previewImageUrl": "https://i.postimg.cc/hPX3K2gb/VID-SHANGHAI-5-D4-N.jpg"
-},
-  
-          
-        ]);
+    .primary { background: #06c755; color: #fff; }
+    .ghost { background: transparent; border: 1px solid #cbd5e1; color: inherit; }
+    .hint { opacity: .85; font-size: 14px; word-break: break-word; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Share Target Picker (เพื่อน/หลายกลุ่ม)</h1>
+    <div class="card">
+      <button id="btnShare" class="primary">แชร์ Flex ต่อ</button>
+      <button id="btnLogin" class="ghost">Log in</button>
+      <button id="btnLogout" class="ghost">Log out</button>
+      <a id="openInLine" class="btn primary" href="#" rel="nofollow">เปิดใน LINE</a>
+      <p id="env" class="hint"></p>
+    </div>
+  </div>
+
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script>
+    // ===== ตั้งค่า =====
+    const LIFF_ID = "2006670623-loPapVk3";     // LIFF ID ของคุณ
+    const ALT_TEXT = "โปรตัดกรุ๊ปญี่ปุ่นไม่บวกเพิ่ม 25–33 คน ราคาเดิม วันนี้ - 30 ต.ค. 68";
+
+    // Flex ของคุณ (แก้ไขได้)
+    function getFlex() {
+      return {
+        type: "bubble",
+        size: "giga",
+        hero: {
+          type: "image",
+          url: "https://i.postimg.cc/RhtqmRHv/SL-31-68.jpg",
+          size: "full",
+          aspectRatio: "3:4",
+          aspectMode: "cover",
+          action: { type: "uri", uri: "https://www.probookingcenter.com/tours/japan" }
+        },
+        // (แนะนำ) เติม body/footers เพื่อสื่อความในกรณีผู้รับปิดภาพตัวอย่าง
+        body: {
+          type: "box", layout: "vertical", spacing: "md", contents: [
+            { type: "text", text: "ญี่ปุ่น คันไซ–เกียวโต–โอซาก้า", weight: "bold", size: "lg", wrap: true },
+            { type: "text", text: "โปรตัดกรุ๊ป 25–33 คน ราคาเดิม", size: "sm", color: "#6b7280", wrap: true }
+          ]
+        },
+        footer: {
+          type: "box", layout: "vertical", spacing: "md", contents: [
+            { type: "button", style: "primary", color: "#06c755",
+              action: { type: "uri", label: "ดูโปรแกรม", uri: "https://www.probookingcenter.com/tours/japan" } }
+          ]
+        }
+      };
+    }
+
+    // ===== UI helpers =====
+    const $ = (id) => document.getElementById(id);
+    function show(id, on = true) { $(id).style.display = on ? "block" : "none"; }
+
+    async function shareFlex() {
+      if (!liff.isApiAvailable("shareTargetPicker")) {
+        alert("อุปกรณ์นี้ไม่รองรับ shareTargetPicker");
+        return;
+      }
+      try {
+        const result = await liff.shareTargetPicker([{ type: "flex", altText: ALT_TEXT, contents: getFlex() }]);
         if (result) {
-          alert(`[${result.status}] Message sent!`);
+          alert(`[${result.status}] ส่งเรียบร้อย 🎉`);
         } else {
-          const [majorVer, minorVer, patchVer] = (
-            liff.getLineVersion() || ""
-          ).split(".");
-
-          if (minorVer === undefined) {
-            alert("ShareTargetPicker was canceled in external browser");
-            return;
-          }
-
-          if (
-            parseInt(majorVer) >= 10 &&
-            parseInt(minorVer) >= 10 &&
-            parseInt(patchVer) > 0
-          ) {
-            alert("ShareTargetPicker was canceled in LINE app");
-          }
+          // ผู้ใช้กดยกเลิก
+          alert("ยกเลิกการแชร์");
         }
+      } catch (err) {
+        alert("แชร์ไม่สำเร็จ: " + (err?.message || err));
       }
-      function logOut() {
-        liff.logout();
-        window.location.reload();
+    }
+
+    async function init() {
+      try {
+        await liff.init({ liffId: LIFF_ID });
+      } catch (e) {
+        alert("liff.init failed: " + (e?.message || e));
+        return;
       }
-      async function main() {
-        await liff.init({ liffId: "2006670623-loPapVk3" });
-        if (liff.isLoggedIn()) {
-          document.getElementById("btnShare").style.display = "block";
-          if (!liff.isInClient()) {
-            document.getElementById("btnLogOut").style.display = "block";
-          }
-        } else {
-          document.getElementById("btnLogin").style.display = "block";
-        }
+
+      const inClient = liff.isInClient();
+      const loggedIn = liff.isLoggedIn();
+      const ctx = liff.getContext?.() || {};
+      $("env").textContent = `inClient=${inClient} | loggedIn=${loggedIn} | context=${ctx.type || "none"}`;
+
+      $("btnShare").onclick  = shareFlex;
+      $("btnLogin").onclick  = () => liff.login();
+      $("btnLogout").onclick = () => { liff.logout(); location.reload(); };
+
+      if (loggedIn) {
+        show("btnShare", true);
+        show("btnLogout", !inClient); // ปุ่ม logout โชว์เฉพาะนอก LINE
+      } else {
+        show("btnLogin", true);
       }
-      main();
-    </script>
-  </body>
+
+      // เปิดจากนอก LINE → มีปุ่มพาเข้า LINE
+      if (!inClient) {
+        const jump = `https://liff.line.me/${2006670623-loPapVk3}`;
+        $("openInLine").href = jump;
+        $("openInLine").style.display = "block";
+      }
+
+      // โหมด auto (ทางเลือก): เพิ่ม ?autosend=1 ท้าย URL ถ้าอยากเปิดแล้วเด้งหน้าจอแชร์เลย
+      const auto = new URL(location.href).searchParams.get("autosend") === "1";
+      if (auto && loggedIn) {
+        // หน้าจอ Share Target Picker ต้องการ gesture บนบางอุปกรณ์
+        // ถ้าไม่เด้ง ให้ผู้ใช้กดปุ่ม 'แชร์ Flex ต่อ' แทน
+        try { await shareFlex(); } catch (_) {}
+      }
+    }
+
+    init();
+  </script>
+</body>
 </html>
