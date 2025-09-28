@@ -1,137 +1,147 @@
 <!DOCTYPE html>
-<html lang="th">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover" />
-  <title>My LIFF App</title>
-  <style>
-    :root { color-scheme: light dark; }
-    body { font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial; margin:0; padding:24px; }
-    .wrap{max-width:720px;margin:0 auto;display:grid;gap:16px}
-    h1{margin:0;font-size:clamp(18px,4vw,24px)}
-    .card{border:1px solid #e5e7eb33;border-radius:14px;padding:16px;box-shadow:0 6px 20px #0001}
-    .row{display:flex;gap:8px;flex-wrap:wrap}
-    button,a.btn{width:100%;padding:12px 16px;border-radius:12px;border:0;font-weight:600;cursor:pointer;text-decoration:none}
-    .primary{background:#06c755;color:#fff}
-    .ghost{background:transparent;border:1px solid #cbd5e1}
-    .muted{opacity:.85;font-size:14px;word-break:break-word}
-    .hide{display:none}
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <h1>แชร์ แบนเนอร์ต่อได้ทันทีในชื่อไลน์ของท่าน</h1>
-    <div class="card">
-      <div class="row">
-        <button id="btnShare" class="primary hide">แชร์</button>
-        <button id="btnSendHere" class="ghost hide">ส่งเข้า “ห้องนี้” ทันที</button>
-        <a id="btnOpenInLine" class="btn primary hide" href="#" rel="nofollow">เปิดหน้านี้ใน LINE</a>
-        <button id="btnLogin" class="ghost hide">Log In</button>
-        <button id="btnLogout" class="ghost hide">Log Out</button>
-      </div>
-      <p id="env" class="muted"></p>
-    </div>
-  </div>
-
-  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <script>
-    // ===== ตั้งค่า =====
-    const LIFF_ID  = "2006670623-loPapVk3"; // ของคุณ
-    const ALT_TEXT = "โปรตัดกรุ๊ปญี่ปุ่นไม่บวกเพิ่ม 25–33 คน ราคาเดิม วันนี้ - 30 ต.ค. 68";
-
-    // Helper
-    const $ = (id)=>document.getElementById(id);
-    const show = (id,on=true)=>$(id).classList[on?"remove":"add"]("hide");
-    const deepLink = () => `https://liff.line.me/${LIFF_ID}`;
-
-    // Flex ของคุณ (แนะนำเพิ่ม body/footer เพื่อสื่อความเวลา preview)
-    function getFlex(){
-      return {
-  "type": "bubble",
-  "size": "giga",
-  "hero": {
-    "type": "image",
-    "url": "https://i.postimg.cc/RhtqmRHv/SL-31-68.jpg",
-    "size": "full",
-    "aspectRatio": "3:4",
-    "aspectMode": "cover",
-    "action": {
-      "type": "uri",
-      "uri": "https://www.probookingcenter.com/tours/japan"
-    }
-  }
-};
-    }
-
-    async function shareTarget(){
-      if (!liff.isApiAvailable("shareTargetPicker")) {
-        alert("อุปกรณ์นี้ไม่รองรับ shareTargetPicker");
-        return;
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover"
+    />
+    <title>My LIFF App</title>
+    <style>
+      body { padding: 24px; font-family: sans-serif; }
+      button {
+        display: none;
+        width: 100%;
+        padding: 16px 0;
+        margin: 8px auto;
       }
-      try{
-        const result = await liff.shareTargetPicker([{
-          type: "flex", altText: ALT_TEXT, contents: getFlex()
-        }]);
-        if (result) alert(`[${result.status}] ส่งเรียบร้อย 🎉`);
-        // result === null แปลว่ายกเลิก
-      }catch(err){
-        alert("แชร์ไม่สำเร็จ: " + (err?.message||err));
-      }
-    }
+    </style>
+  </head>
+  <body>
+    <button id="btnShare" onclick="sendShare()">Share Target Picker</button>
+    <button id="btnLogin" onclick="liff.login()">Log In</button>
+    <button id="btnLogOut" onclick="logOut()">Log Out</button>
 
-    async function sendHere(){
-      const ctx = liff.getContext?.();
-      if (!['group','room','utou'].includes(ctx?.type)) {
-        alert("ต้องเปิดจากในห้องแชตเพื่อส่งเข้า ‘ห้องนี้’");
-        return;
-      }
-      try{
-        await liff.sendMessages([{ type: "flex", altText: ALT_TEXT, contents: getFlex() }]);
-        alert("ส่งเข้า ‘ห้องนี้’ เรียบร้อย ✅");
-      }catch(err){
-        alert("ส่งไม่สำเร็จ: " + (err?.message||err));
-      }
-    }
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <script>
+      // === config ที่ต้องใช้ซ้ำ ===
+      const LIFF_ID = "2006670623-loPapVk3";
+      const AUTOSHARE_PARAM = "autoshare=1";
+      const LIFF_AUTOSHARE_URL = `https://liff.line.me/${LIFF_ID}?${AUTOSHARE_PARAM}`;
 
-    function wireUI(inClient, loggedIn, ctxType){
-      $("env").textContent = `inClient=${inClient} | loggedIn=${loggedIn} | context=${ctxType}`;
-      // ปุ่มหลัก
-      $("btnShare").onclick    = shareTarget;
-      $("btnSendHere").onclick = sendHere;
-      $("btnLogin").onclick    = ()=> liff.login();
-      $("btnLogout").onclick   = ()=> { liff.logout(); location.reload(); };
-
-      if (loggedIn) {
-        show("btnShare", true);
-        if (!inClient) show("btnLogout", true);
-        if (inClient && ['group','room','utou'].includes(ctxType)) show("btnSendHere", true);
-      } else {
-        show("btnLogin", true);
+      // --- Flex เดิม + เพิ่มปุ่ม "แชร์ต่อ" ใน footer ---
+      function buildFlexBubble() {
+        return {
+          type: "bubble",
+          size: "giga",
+          hero: {
+            type: "image",
+            url: "https://i.postimg.cc/RhtqmRHv/SL-31-68.jpg",
+            size: "full",
+            aspectRatio: "3:4",
+            aspectMode: "cover",
+            action: {
+              type: "uri",
+              uri: "https://www.probookingcenter.com/tours/japan"
+            }
+          },
+          footer: {
+            type: "box",
+            layout: "vertical",
+            spacing: "md",
+            contents: [
+              {
+                type: "button",
+                style: "primary",
+                action: {
+                  type: "uri",
+                  label: "🔁 แชร์ต่อ",
+                  uri: LIFF_AUTOSHARE_URL
+                }
+              },
+              {
+                type: "button",
+                style: "secondary",
+                action: {
+                  type: "uri",
+                  label: "ดูโปรแกรม",
+                  uri: "https://www.probookingcenter.com/tours/japan"
+                }
+              }
+            ]
+          }
+        };
       }
 
-      // เปิดนอก LINE → โชว์ปุ่มพาเข้า LINE
-      if (!inClient) {
-        $("btnOpenInLine").href = deepLink();
-        show("btnOpenInLine", true);
+      async function sendShare() {
+        // กันพลาดกรณีรันบนเบราว์เซอร์ภายนอก/เวอร์ชันไม่รองรับ
+        if (!liff.isApiAvailable("shareTargetPicker")) {
+          // เปิด LIFF ตัวเองแทน (ให้ผู้ใช้กดแชร์จากในแอป)
+          liff.openWindow({ url: LIFF_AUTOSHARE_URL, external: false });
+          return;
+        }
+
+        const result = await liff.shareTargetPicker([
+          {
+            type: "flex",
+            altText:
+              "โปรตัดกรุ๊ปญี่ปุ่นไม่บวกเพิ่ม 25-33 คน ราคาเดิม วันนี้ - 30 ต.ค. 68",
+            contents: buildFlexBubble()
+          }
+        ]);
+
+        if (result) {
+          alert(`[${result.status}] Message sent!`);
+        } else {
+          const [majorVer, minorVer, patchVer] = (liff.getLineVersion() || "").split(".");
+          if (minorVer === undefined) {
+            alert("ShareTargetPicker was canceled in external browser");
+            return;
+          }
+          if (parseInt(majorVer) >= 10 && parseInt(minorVer) >= 10 && parseInt(patchVer) > 0) {
+            alert("ShareTargetPicker was canceled in LINE app");
+          }
+        }
       }
-    }
 
-    async function main(){
-      try { await liff.init({ liffId: LIFF_ID }); }
-      catch(e){ alert("liff.init failed: " + (e?.message||e)); return; }
-
-      const inClient = liff.isInClient();
-      const loggedIn = liff.isLoggedIn();
-      const ctxType  = liff.getContext?.().type || "none";
-      wireUI(inClient, loggedIn, ctxType);
-
-      // (ออปชัน) auto เปิดหน้าจอแชร์เมื่อใส่ ?autosend=1 และล็อกอินแล้ว
-      const auto = new URL(location.href).searchParams.get("autosend")==="1";
-      if (auto && loggedIn && inClient) {
-        try { await shareTarget(); } catch(_) {}
+      function logOut() {
+        liff.logout();
+        window.location.reload();
       }
-    }
-    main();
-  </script>
-</body>
+
+      function hasAutoShareParam() {
+        return window.location.search.replace("?", "").split("&").includes(AUTOSHARE_PARAM);
+      }
+
+      async function main() {
+        await liff.init({ liffId: LIFF_ID });
+
+        // โชว์ปุ่มตามสถานะ
+        if (liff.isLoggedIn()) {
+          document.getElementById("btnShare").style.display = "block";
+          if (!liff.isInClient()) {
+            document.getElementById("btnLogOut").style.display = "block";
+          }
+        } else {
+          // ถ้าถูกเปิดมาด้วย ?autoshare=1 ให้บังคับล็อกอินแล้วกลับเข้ามา autoshare ต่อ
+          if (hasAutoShareParam()) {
+            liff.login({ redirectUri: window.location.href });
+            return; // รอ redirect กลับมา
+          }
+          document.getElementById("btnLogin").style.display = "block";
+        }
+
+        // ถ้าอยู่ในแอป LINE และมีพารามิเตอร์ autoshare ให้เด้งแชร์ทันที
+        if (liff.isLoggedIn() && liff.isInClient() && hasAutoShareParam()) {
+          try {
+            await sendShare();
+          } catch (e) {
+            console.error(e);
+          }
+        }
+      }
+
+      main();
+    </script>
+  </body>
 </html>
