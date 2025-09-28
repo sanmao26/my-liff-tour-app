@@ -7,38 +7,45 @@
   <style>
     :root { color-scheme: light dark; }
     body { font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial; margin:0; padding:24px; }
-    .wrap { max-width: 720px; margin: 0 auto; padding: 24px; display: grid; gap: 16px; }
-    h1 { margin: 0; font-size: clamp(18px, 4vw, 24px); }
-    .card { border: 1px solid #e5e7eb33; border-radius: 14px; padding: 16px; box-shadow: 0 6px 20px #0001; }
-    button, a.btn {
-      display: none; width: 100%; padding: 14px 16px; border-radius: 12px; border: 0;
-      text-align: center; font-weight: 600; text-decoration: none;
-    }
-    .primary { background: #06c755; color: #fff; }
-    .ghost { background: transparent; border: 1px solid #cbd5e1; color: inherit; }
-    .hint { opacity: .85; font-size: 14px; word-break: break-word; }
+    .wrap{max-width:720px;margin:0 auto;display:grid;gap:16px}
+    h1{margin:0;font-size:clamp(18px,4vw,24px)}
+    .card{border:1px solid #e5e7eb33;border-radius:14px;padding:16px;box-shadow:0 6px 20px #0001}
+    .row{display:flex;gap:8px;flex-wrap:wrap}
+    button,a.btn{width:100%;padding:12px 16px;border-radius:12px;border:0;font-weight:600;cursor:pointer;text-decoration:none}
+    .primary{background:#06c755;color:#fff}
+    .ghost{background:transparent;border:1px solid #cbd5e1}
+    .muted{opacity:.85;font-size:14px;word-break:break-word}
+    .hide{display:none}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <h1>Share Target Picker (เพื่อน/หลายกลุ่ม)</h1>
+    <h1>แชร์ Flex (เลือกหลายกลุ่ม / ส่งเข้าแชตนี้)</h1>
     <div class="card">
-      <button id="btnShare" class="primary">แชร์ Flex ต่อ</button>
-      <button id="btnLogin" class="ghost">Log in</button>
-      <button id="btnLogout" class="ghost">Log out</button>
-      <a id="openInLine" class="btn primary" href="#" rel="nofollow">เปิดใน LINE</a>
-      <p id="env" class="hint"></p>
+      <div class="row">
+        <button id="btnShare" class="primary hide">แชร์ Flex (เลือกหลายกลุ่ม)</button>
+        <button id="btnSendHere" class="ghost hide">ส่งเข้า “ห้องนี้” ทันที</button>
+        <a id="btnOpenInLine" class="btn primary hide" href="#" rel="nofollow">เปิดหน้านี้ใน LINE</a>
+        <button id="btnLogin" class="ghost hide">Log In</button>
+        <button id="btnLogout" class="ghost hide">Log Out</button>
+      </div>
+      <p id="env" class="muted"></p>
     </div>
   </div>
 
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <script>
     // ===== ตั้งค่า =====
-    const LIFF_ID = "2006670623-loPapVk3";     // LIFF ID ของคุณ
+    const LIFF_ID  = "2006670623-loPapVk3"; // ของคุณ
     const ALT_TEXT = "โปรตัดกรุ๊ปญี่ปุ่นไม่บวกเพิ่ม 25–33 คน ราคาเดิม วันนี้ - 30 ต.ค. 68";
 
-    // Flex ของคุณ (แก้ไขได้)
-    function getFlex() {
+    // Helper
+    const $ = (id)=>document.getElementById(id);
+    const show = (id,on=true)=>$(id).classList[on?"remove":"add"]("hide");
+    const deepLink = () => `https://liff.line.me/${LIFF_ID}`;
+
+    // Flex ของคุณ (แนะนำเพิ่ม body/footer เพื่อสื่อความเวลา preview)
+    function getFlex(){
       return {
         type: "bubble",
         size: "giga",
@@ -50,7 +57,6 @@
           aspectMode: "cover",
           action: { type: "uri", uri: "https://www.probookingcenter.com/tours/japan" }
         },
-        // (แนะนำ) เติม body/footers เพื่อสื่อความในกรณีผู้รับปิดภาพตัวอย่าง
         body: {
           type: "box", layout: "vertical", spacing: "md", contents: [
             { type: "text", text: "ญี่ปุ่น คันไซ–เกียวโต–โอซาก้า", weight: "bold", size: "lg", wrap: true },
@@ -66,69 +72,75 @@
       };
     }
 
-    // ===== UI helpers =====
-    const $ = (id) => document.getElementById(id);
-    function show(id, on = true) { $(id).style.display = on ? "block" : "none"; }
-
-    async function shareFlex() {
+    async function shareTarget(){
       if (!liff.isApiAvailable("shareTargetPicker")) {
         alert("อุปกรณ์นี้ไม่รองรับ shareTargetPicker");
         return;
       }
-      try {
-        const result = await liff.shareTargetPicker([{ type: "flex", altText: ALT_TEXT, contents: getFlex() }]);
-        if (result) {
-          alert(`[${result.status}] ส่งเรียบร้อย 🎉`);
-        } else {
-          // ผู้ใช้กดยกเลิก
-          alert("ยกเลิกการแชร์");
-        }
-      } catch (err) {
-        alert("แชร์ไม่สำเร็จ: " + (err?.message || err));
+      try{
+        const result = await liff.shareTargetPicker([{
+          type: "flex", altText: ALT_TEXT, contents: getFlex()
+        }]);
+        if (result) alert(`[${result.status}] ส่งเรียบร้อย 🎉`);
+        // result === null แปลว่ายกเลิก
+      }catch(err){
+        alert("แชร์ไม่สำเร็จ: " + (err?.message||err));
       }
     }
 
-    async function init() {
-      try {
-        await liff.init({ liffId: LIFF_ID });
-      } catch (e) {
-        alert("liff.init failed: " + (e?.message || e));
+    async function sendHere(){
+      const ctx = liff.getContext?.();
+      if (!['group','room','utou'].includes(ctx?.type)) {
+        alert("ต้องเปิดจากในห้องแชตเพื่อส่งเข้า ‘ห้องนี้’");
         return;
       }
+      try{
+        await liff.sendMessages([{ type: "flex", altText: ALT_TEXT, contents: getFlex() }]);
+        alert("ส่งเข้า ‘ห้องนี้’ เรียบร้อย ✅");
+      }catch(err){
+        alert("ส่งไม่สำเร็จ: " + (err?.message||err));
+      }
+    }
 
-      const inClient = liff.isInClient();
-      const loggedIn = liff.isLoggedIn();
-      const ctx = liff.getContext?.() || {};
-      $("env").textContent = `inClient=${inClient} | loggedIn=${loggedIn} | context=${ctx.type || "none"}`;
-
-      $("btnShare").onclick  = shareFlex;
-      $("btnLogin").onclick  = () => liff.login();
-      $("btnLogout").onclick = () => { liff.logout(); location.reload(); };
+    function wireUI(inClient, loggedIn, ctxType){
+      $("env").textContent = `inClient=${inClient} | loggedIn=${loggedIn} | context=${ctxType}`;
+      // ปุ่มหลัก
+      $("btnShare").onclick    = shareTarget;
+      $("btnSendHere").onclick = sendHere;
+      $("btnLogin").onclick    = ()=> liff.login();
+      $("btnLogout").onclick   = ()=> { liff.logout(); location.reload(); };
 
       if (loggedIn) {
         show("btnShare", true);
-        show("btnLogout", !inClient); // ปุ่ม logout โชว์เฉพาะนอก LINE
+        if (!inClient) show("btnLogout", true);
+        if (inClient && ['group','room','utou'].includes(ctxType)) show("btnSendHere", true);
       } else {
         show("btnLogin", true);
       }
 
-      // เปิดจากนอก LINE → มีปุ่มพาเข้า LINE
+      // เปิดนอก LINE → โชว์ปุ่มพาเข้า LINE
       if (!inClient) {
-        const jump = `https://liff.line.me/${2006670623-loPapVk3}`;
-        $("openInLine").href = jump;
-        $("openInLine").style.display = "block";
-      }
-
-      // โหมด auto (ทางเลือก): เพิ่ม ?autosend=1 ท้าย URL ถ้าอยากเปิดแล้วเด้งหน้าจอแชร์เลย
-      const auto = new URL(location.href).searchParams.get("autosend") === "1";
-      if (auto && loggedIn) {
-        // หน้าจอ Share Target Picker ต้องการ gesture บนบางอุปกรณ์
-        // ถ้าไม่เด้ง ให้ผู้ใช้กดปุ่ม 'แชร์ Flex ต่อ' แทน
-        try { await shareFlex(); } catch (_) {}
+        $("btnOpenInLine").href = deepLink();
+        show("btnOpenInLine", true);
       }
     }
 
-    init();
+    async function main(){
+      try { await liff.init({ liffId: LIFF_ID }); }
+      catch(e){ alert("liff.init failed: " + (e?.message||e)); return; }
+
+      const inClient = liff.isInClient();
+      const loggedIn = liff.isLoggedIn();
+      const ctxType  = liff.getContext?.().type || "none";
+      wireUI(inClient, loggedIn, ctxType);
+
+      // (ออปชัน) auto เปิดหน้าจอแชร์เมื่อใส่ ?autosend=1 และล็อกอินแล้ว
+      const auto = new URL(location.href).searchParams.get("autosend")==="1";
+      if (auto && loggedIn && inClient) {
+        try { await shareTarget(); } catch(_) {}
+      }
+    }
+    main();
   </script>
 </body>
 </html>
