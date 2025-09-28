@@ -32,44 +32,20 @@
       // --- Flex เดิม + เพิ่มปุ่ม "แชร์ต่อ" ใน footer ---
       function buildFlexBubble() {
         return {
-          type: "bubble",
-          size: "giga",
-          hero: {
-            type: "image",
-            url: "https://i.postimg.cc/RhtqmRHv/SL-31-68.jpg",
-            size: "full",
-            aspectRatio: "3:4",
-            aspectMode: "cover",
-            action: {
-              type: "uri",
-              uri: "https://www.probookingcenter.com/tours/japan"
-            }
-          },
-          footer: {
-            type: "box",
-            layout: "vertical",
-            spacing: "md",
-            contents: [
-              {
-                type: "button",
-                style: "primary",
-                action: {
-                  type: "uri",
-                  label: "🔁 แชร์ต่อ",
-                  uri: LIFF_AUTOSHARE_URL
-                }
-              },
-              {
-                type: "button",
-                style: "secondary",
-                action: {
-                  type: "uri",
-                  label: "ดูโปรแกรม",
-                  uri: "https://www.probookingcenter.com/tours/japan"
-                }
-              }
-            ]
-          }
+  "type": "bubble",
+  "size": "giga",
+  "hero": {
+    "type": "image",
+    "url": "https://i.postimg.cc/RhtqmRHv/SL-31-68.jpg",
+    "size": "full",
+    "aspectRatio": "3:4",
+    "aspectMode": "cover",
+    "action": {
+      "type": "uri",
+      "uri": "https://www.probookingcenter.com/tours/japan"
+    }
+  }
+}
         };
       }
 
