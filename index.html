@@ -47,30 +47,20 @@
     // Flex ของคุณ (แนะนำเพิ่ม body/footer เพื่อสื่อความเวลา preview)
     function getFlex(){
       return {
-        type: "bubble",
-        size: "giga",
-        hero: {
-          type: "image",
-          url: "https://i.postimg.cc/RhtqmRHv/SL-31-68.jpg",
-          size: "full",
-          aspectRatio: "3:4",
-          aspectMode: "cover",
-          action: { type: "uri", uri: "https://www.probookingcenter.com/tours/japan" }
-        },
-        body: {
-          type: "box", layout: "vertical", spacing: "md", contents: [
-            { type: "text", text: "ญี่ปุ่น คันไซ–เกียวโต–โอซาก้า", weight: "bold", size: "lg", wrap: true },
-            { type: "text", text: "โปรตัดกรุ๊ป 25–33 คน ราคาเดิม", size: "sm", color: "#6b7280", wrap: true }
-          ]
-        },
-        footer: {
-          type: "box", layout: "vertical", spacing: "md", contents: [
-            { type: "button", style: "primary", color: "#06c755",
-              action: { type: "uri", label: "ดูโปรแกรม", uri: "https://www.probookingcenter.com/tours/japan" } }
-          ]
-        }
-      };
+  "type": "bubble",
+  "size": "giga",
+  "hero": {
+    "type": "image",
+    "url": "https://i.postimg.cc/RhtqmRHv/SL-31-68.jpg",
+    "size": "full",
+    "aspectRatio": "3:4",
+    "aspectMode": "cover",
+    "action": {
+      "type": "uri",
+      "uri": "https://www.probookingcenter.com/tours/japan"
     }
+  }
+}
 
     async function shareTarget(){
       if (!liff.isApiAvailable("shareTargetPicker")) {
@@ -103,7 +93,7 @@
     }
 
     function wireUI(inClient, loggedIn, ctxType){
-      $("env").textContent = `inClient=${inClient} | loggedIn=${loggedIn} | context=${ctxType}`;
+      $("env").textContent = `กดปุ่มเพื่อแชร์ แบนเนอร์ได้เลยครับ`;
       // ปุ่มหลัก
       $("btnShare").onclick    = shareTarget;
       $("btnSendHere").onclick = sendHere;
