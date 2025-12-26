@@ -1,186 +1,59 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover"
-    />
-    <title>My LIFF App</title>
-    <style>
-      body {
-        padding: 256px;
-      }
-      button {
-        display: none;
-        width: 50%;
-        padding: 16px 0;
-        margin: 16px auto;
-      }
-    </style>
-  </head>
-  <body>
-    <button id="btnShare" onclick="sendShare()">Share Target Picker</button>
-    <button id="btnLogin" onclick="liff.login()">Log In</button>
-    <button id="btnLogOut" onclick="logOut()">Log Out</button>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flex Sender + Alt Text</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <script>
-      async function sendShare() {
-        const result = await liff.shareTargetPicker([
-          {
-            type: "flex",
-            altText:
-              "🔥รวมโปรญี่ปุ่น โตเกียว ฟีลดี...คุ้มครบ จบในทริปเดียว ✅เริ่ม 23,999 บาท! จองเลย ✨ ",
-            contents: {
-  "type": "carousel",
-  "contents": [
-    {
-      "type": "bubble",
-      "size": "mega",
-      "hero": {
-        "type": "image",
-        "url": "https://static.probookingcenter.com/media/banner/1460?w=320&h=320",
-        "size": "full",
-        "aspectMode": "cover",
-        "aspectRatio": "1:1",
-        "action": {
-          "type": "postback",
-          "label": "action",
-          "data": "1",
-          "displayText": "📋 โปรแกรมโค้ด : PJPNRT20A-SL \n🗓 ช่วงเวลาเดินทาง : ต.ค.-พ.ย. 2025 \n✈️ สายการบิน : Thai Lion Air (SL)\n\n📂 ดาวน์โหลดโปรแกรม: \n📕 pdf: https://static.probookingcenter.com/media/pdf/1460 \n\n📂 ดาวน์โหลดแบนเนอร์: \n🌁 รูปภาพ: https://static.probookingcenter.com/media/banner/1460"
-        }
-      }
-    },
-    {
-      "type": "bubble",
-      "size": "mega",
-      "hero": {
-        "type": "image",
-        "size": "full",
-        "aspectMode": "cover",
-        "aspectRatio": "1:1",
-        "action": {
-          "type": "postback",
-          "label": "action",
-          "data": "1",
-          "displayText": "📋 โปรแกรมโค้ด : PJPNRT20B-SL \n🗓 ช่วงเวลาเดินทาง : ธ.ค. 2025 \n✈️ สายการบิน : Thai Lion Air (SL)\n\n📂 ดาวน์โหลดโปรแกรม: \n📕 pdf: https://static.probookingcenter.com/media/pdf/1508 \n\n📂 ดาวน์โหลดแบนเนอร์: \n🌁 รูปภาพ: https://static.probookingcenter.com/media/banner/1508"
-        },
-        "url": "https://static.probookingcenter.com/media/banner/1508?w=320&h=320"
-      }
-    },
-    {
-      "type": "bubble",
-      "size": "mega",
-      "hero": {
-        "type": "image",
-        "size": "full",
-        "aspectMode": "cover",
-        "aspectRatio": "1:1",
-        "action": {
-          "type": "postback",
-          "label": "action",
-          "data": "1",
-          "displayText": "📋 โปรแกรมโค้ด : PJPNRT21-SL \n🗓 ช่วงเวลาเดินทาง : ต.ค.-พ.ย. 2025 \n✈️ สายการบิน : Thai Lion Air (SL)\n\n📂 ดาวน์โหลดโปรแกรม: \n📕 pdf: https://static.probookingcenter.com/media/pdf/1447 \n\n📂 ดาวน์โหลดแบนเนอร์: \n🌁 รูปภาพ: https://static.probookingcenter.com/media/banner/1447"
-        },
-        "url": "https://static.probookingcenter.com/media/banner/1447?w=320&h=320"
-      }
-    },
-    {
-      "type": "bubble",
-      "size": "mega",
-      "hero": {
-        "type": "image",
-        "size": "full",
-        "aspectMode": "cover",
-        "aspectRatio": "1:1",
-        "action": {
-          "type": "postback",
-          "label": "action",
-          "data": "1",
-          "displayText": "📋 โปรแกรมโค้ด : PJPNRT22-SL \n🗓 ช่วงเวลาเดินทาง : ต.ค.-พ.ย. 2025 \n✈️ สายการบิน : Thai Lion Air (SL)\n\n📂 ดาวน์โหลดโปรแกรม: \n📕 pdf: https://static.probookingcenter.com/media/pdf/1449 \n\n📂 ดาวน์โหลดแบนเนอร์: \n🌁 รูปภาพ: https://static.probookingcenter.com/media/banner/1449"
-        },
-        "url": "https://static.probookingcenter.com/media/banner/1449?w=320&h=320"
-      }
-    },
-    {
-      "type": "bubble",
-      "size": "mega",
-      "hero": {
-        "type": "image",
-        "size": "full",
-        "aspectMode": "cover",
-        "aspectRatio": "1:1",
-        "action": {
-          "type": "postback",
-          "label": "action",
-          "data": "1",
-          "displayText": "📋 โปรแกรมโค้ด : PJPNRT23-SL \n🗓 ช่วงเวลาเดินทาง : ธ.ค.-มี.ค. 2026 \n✈️ สายการบิน : Thai Lion Air (SL)\n\n📂 ดาวน์โหลดโปรแกรม: \n📕 pdf: https://static.probookingcenter.com/media/pdf/1448 \n\n📂 ดาวน์โหลดแบนเนอร์: \n🌁 รูปภาพ: https://static.probookingcenter.com/media/banner/1448"
-        },
-        "url": "https://static.probookingcenter.com/media/banner/1448?w=320&h=320"
-      }
-    },
-    {
-      "type": "bubble",
-      "size": "mega",
-      "hero": {
-        "type": "image",
-        "size": "full",
-        "aspectMode": "cover",
-        "aspectRatio": "1:1",
-        "action": {
-          "type": "postback",
-          "label": "action",
-          "data": "1",
-          "displayText": "📋 โปรแกรมโค้ด : PJPNRT24-SL \n🗓 ช่วงเวลาเดินทาง : ธ.ค.-มี.ค. 2026 \n✈️ สายการบิน : Thai Lion Air (SL)\n\n📂 ดาวน์โหลดโปรแกรม: \n📕 pdf: https://static.probookingcenter.com/media/pdf/1450 \n\n📂 ดาวน์โหลดแบนเนอร์: \n🌁 รูปภาพ: https://static.probookingcenter.com/media/banner/1450"
-        },
-        "url": "https://static.probookingcenter.com/media/banner/1450?w=320&h=320"
-      }
-    }
-  ]
-}
-      
-          },
-              
-          
-          
-        ]);
-        if (result) {
-          alert(`[${result.status}] Message sent!`);
-        } else {
-          const [majorVer, minorVer, patchVer] = (
-            liff.getLineVersion() || ""
-          ).split(".");
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen font-sans flex items-center justify-center p-4">
 
-          if (minorVer === undefined) {
-            alert("ShareTargetPicker was canceled in external browser");
-            return;
-          }
+    <div class="w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col min-h-[600px]">
+        
+        <div class="bg-[#06c755] p-4 text-white flex justify-between items-center">
+            <h1 class="font-bold text-lg"><i class="fab fa-line mr-2"></i>Flex Sender</h1>
+            <button onclick="changeLiffId()" class="text-xs bg-white/20 hover:bg-white/30 text-white px-2 py-1 rounded">
+                <i class="fas fa-exchange-alt"></i> เปลี่ยน ID
+            </button>
+        </div>
 
-          if (
-            parseInt(majorVer) >= 10 &&
-            parseInt(minorVer) >= 10 &&
-            parseInt(patchVer) > 0
-          ) {
-            alert("ShareTargetPicker was canceled in LINE app");
-          }
-        }
-      }
-      function logOut() {
-        liff.logout();
-        window.location.reload();
-      }
-      async function main() {
-        await liff.init({ liffId: "2006670623-vPRByDwp" });
-        if (liff.isLoggedIn()) {
-          document.getElementById("btnShare").style.display = "block";
-          if (!liff.isInClient()) {
-            document.getElementById("btnLogOut").style.display = "block";
-          }
-        } else {
-          document.getElementById("btnLogin").style.display = "block";
-        }
-      }
-      main();
-    </script>
-  </body>
-</html>
+        <div id="setupScreen" class="flex-1 flex flex-col items-center justify-center p-8 hidden">
+            <h2 class="text-xl font-bold text-gray-700 mb-4">ตั้งค่าเริ่มต้น</h2>
+            <div class="w-full">
+                <label class="text-xs font-bold text-gray-500 mb-1 block">ใส่ LIFF ID ของคุณ</label>
+                <input type="text" id="liffIdInput" placeholder="200xxxxxxx-xxxxxxx" 
+                    class="w-full border-2 border-gray-200 rounded-lg p-3 text-center focus:border-[#06c755] focus:outline-none mb-4">
+                <button onclick="saveAndConnect()" class="w-full bg-[#06c755] text-white font-bold py-3 rounded-lg shadow-md hover:bg-[#05b34c]">
+                    บันทึกและใช้งาน
+                </button>
+            </div>
+        </div>
+
+        <div id="loginScreen" class="flex-1 flex flex-col items-center justify-center p-8 hidden">
+            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                <i class="fas fa-user-lock text-2xl text-gray-400"></i>
+            </div>
+            <h2 class="text-lg font-bold text-gray-700 mb-2">เข้าสู่ระบบ</h2>
+            <button onclick="liff.login()" class="w-full bg-[#00c300] text-white font-bold py-3 rounded-lg shadow-lg flex justify-center items-center gap-2">
+                Log in with LINE
+            </button>
+        </div>
+
+        <div id="appScreen" class="flex-1 flex flex-col p-4 gap-4 hidden">
+            <div class="flex items-center gap-3 bg-blue-50 p-3 rounded-lg border border-blue-100">
+                <img id="profileImg" src="" class="w-10 h-10 rounded-full border border-white">
+                <div class="flex-1 min-w-0">
+                    <p class="text-[10px] text-gray-500">ผู้ส่ง:</p>
+                    <p id="profileName" class="font-bold text-gray-800 text-sm truncate">...</p>
+                </div>
+                <button onclick="logout()" class="text-xs text-red-500 border border-red-200 px-2 py-1 rounded hover:bg-red-50">Out</button>
+            </div>
+
+            <div>
+                <label class="text-xs font-bold text-gray-700 block mb-1">
+                    <i class="fas fa-comment-dots text-[#06c755]"></i> ข้อความแจ้งเตือน (Alt Text)
+                </label>
+                <input type="text" id="altTextInput" placeholder="Ex. โปรโมชั่นใหม่มาแล้ว! (ข้อความที่เด้งแจ้งเตือน)" 
+                    class="
